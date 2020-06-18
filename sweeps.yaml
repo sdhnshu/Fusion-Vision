@@ -1,0 +1,37 @@
+program: text_classification/train.py
+command:
+  - ${env}
+  - $PWD/venv/bin/python
+  - ${program}
+  - "--use_glove"
+  - "--shuffle"
+  - "--lower"
+  - "--data_url=https://raw.githubusercontent.com/madewithml/lessons/master/data/news.csv"
+  - ${args}
+method:  bayes
+metric:
+  name: val_loss
+  goal: minimize
+parameters:
+  dropout_p:
+    distribution: uniform
+    min: 0.0
+    max: 0.3
+  batch_size:
+    distribution: int_uniform
+    min: 64
+    max: 256
+  hidden_dim:
+    distribution: int_uniform
+    min: 64
+    max: 256
+  num_filters:
+    distribution: int_uniform
+    min: 50
+    max: 200
+  embedding_dim:
+    values: [100, 200, 300]
+  learning_rate:
+    distribution: uniform
+    min: 1e-5
+    max: 1e-3

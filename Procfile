@@ -1,0 +1,1 @@
+web: wandb login && pip install http://download.pytorch.org/whl/cpu/torch-1.4.0%2Bcpu-cp36-cp36m-linux_x86_64.whl && sh setup.sh && streamlit run text_classification/streamlit.py
