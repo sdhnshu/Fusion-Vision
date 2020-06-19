@@ -6,3 +6,11 @@ The inspiration came from an [artwork by prominent artist Mario Klingemann](http
 
 # Technology
 The latent spaces of a generative adversarial network called [StyleGAN2](https://github.com/NVlabs/stylegan2) will be explored based on the techniques used in the [GANSpace](https://github.com/harskish/ganspace) paper and interesting controls will be shortlisted. These controls are then mapped to an audio signal and can be controlled using a friendly user interface.
+
+# Environment
+- Python 3.8
+- Pytorch 1.5
+- `pip install -r requirements.txt`
+
+# Credits
+- Starting template: [madewithml](https://github.com/madewithml/e2e-ml-app-pytorch)
