@@ -22,6 +22,7 @@
 - StyleGAN uses PGGANs training style
 
 # 26 June
-- History of GANs [vid](https://youtu.be/0d2WsXtQHR8)
-- Inspiration and techniques [vid](https://youtu.be/lYoIn1aL37s)
+- History of GANs: [vid](https://youtu.be/0d2WsXtQHR8)
+- Inspiration and techniques: [vid](https://youtu.be/lYoIn1aL37s)
 - Simple GAN implenentation in pytorch: [code](https://github.com/nbertagnolli/pytorch-simple-gan)
+- Generator as an inverse-transform function: [blog](https://towardsdatascience.com/understanding-generative-adversarial-networks-gans-cd6e4651a29)
