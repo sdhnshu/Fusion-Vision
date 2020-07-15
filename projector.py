@@ -73,10 +73,9 @@ def make_image(tensor):
 
 
 if __name__ == "__main__":
-    device = "cuda"
-
     parser = argparse.ArgumentParser()
     parser.add_argument("--ckpt", type=str, required=True)
+    parser.add_argument("--device", type=str, default='cuda')
     parser.add_argument("--size", type=int, default=256)
     parser.add_argument("--lr_rampup", type=float, default=0.05)
     parser.add_argument("--lr_rampdown", type=float, default=0.25)
@@ -90,6 +89,7 @@ if __name__ == "__main__":
     parser.add_argument("files", metavar="FILES", nargs="+")
 
     args = parser.parse_args()
+    device = args.device
 
     n_mean_latent = 10000
 
@@ -179,7 +179,7 @@ if __name__ == "__main__":
 
         noise_normalize_(noises)
 
-        if (i + 1) % 100 == 0:
+        if (i + 1) % (100 if args.step > 100 else 1) == 0:
             latent_path.append(latent_in.detach().clone())
 
         pbar.set_description(
@@ -209,6 +209,6 @@ if __name__ == "__main__":
 
         img_name = os.path.splitext(os.path.basename(input_name))[0] + "-project.png"
         pil_img = Image.fromarray(img_ar[i])
-        pil_img.save(img_name)
+        pil_img.save('stylegan2/sample/' + img_name)
 
-    torch.save(result_file, filename)
+    torch.save(result_file, 'stylegan2/sample/' + filename)
