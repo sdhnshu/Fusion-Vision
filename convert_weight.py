@@ -198,16 +198,16 @@ def fill_statedict(state_dict, vars, size):
 
 
 if __name__ == "__main__":
-    device = "cuda"
-
     parser = argparse.ArgumentParser()
     parser.add_argument("--repo", type=str, required=True)
+    parser.add_argument("--device", type=str, required=True, default='cuda')
     parser.add_argument("--gen", action="store_true")
     parser.add_argument("--disc", action="store_true")
     parser.add_argument("--channel_multiplier", type=int, default=2)
     parser.add_argument("path", metavar="PATH")
 
     args = parser.parse_args()
+    device = args.device
 
     sys.path.append(args.repo)
 
