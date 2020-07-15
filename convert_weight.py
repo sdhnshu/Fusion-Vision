@@ -200,7 +200,7 @@ def fill_statedict(state_dict, vars, size):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--repo", type=str, required=True)
-    parser.add_argument("--device", type=str, required=True, default='cuda')
+    parser.add_argument("--device", type=str, default='cuda')
     parser.add_argument("--gen", action="store_true")
     parser.add_argument("--disc", action="store_true")
     parser.add_argument("--channel_multiplier", type=int, default=2)
@@ -244,7 +244,8 @@ if __name__ == "__main__":
         ckpt["d"] = d_state
 
     name = os.path.splitext(os.path.basename(args.path))[0]
-    torch.save(ckpt, name + ".pt")
+    os.makedirs("stylegan2/converted-ckpts", exist_ok=True)
+    torch.save(ckpt, "stylegan2/converted-ckpts/" + name + ".pt")
 
     batch_size = {256: 16, 512: 9, 1024: 4}
     n_sample = batch_size.get(size, 25)
@@ -275,5 +276,6 @@ if __name__ == "__main__":
     print(img_diff.abs().max())
 
     utils.save_image(
-        img_concat, name + ".png", nrow=n_sample, normalize=True, range=(-1, 1)
+        img_concat, "stylegan2/converted-ckpts/" + name + ".png",
+        nrow=n_sample, normalize=True, range=(-1, 1)
     )
