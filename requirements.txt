@@ -1,2 +1,7 @@
 flake8
 autopep8
+torch==1.5.1
+torchvision==0.6.1
+scikit-image==0.17.2
+tqdm==4.47.0
+lmdb==0.98

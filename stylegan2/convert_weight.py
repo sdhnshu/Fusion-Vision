@@ -8,7 +8,7 @@ import torch
 import numpy as np
 from torchvision import utils
 
-from model import Generator, Discriminator
+from stylegan2.model import Generator, Discriminator
 
 
 def convert_modconv(vars, source_name, target_name, flip=False):

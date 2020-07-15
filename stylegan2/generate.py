@@ -2,7 +2,7 @@ import argparse
 
 import torch
 from torchvision import utils
-from model import Generator
+from stylegan2.model import Generator
 from tqdm import tqdm
 
 
@@ -17,7 +17,7 @@ def generate(args, g_ema, device, mean_latent):
 
             utils.save_image(
                 sample,
-                f'sample/{str(i).zfill(6)}.png',
+                f'stylegan2/sample/{str(i).zfill(6)}.png',
                 nrow=1,
                 normalize=True,
                 range=(-1, 1),

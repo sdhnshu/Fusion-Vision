@@ -7,12 +7,12 @@ from torch import nn
 from torch.nn import functional as F
 from torch.utils.data import DataLoader
 from torchvision import transforms
-from torchvision.models import inception_v3, Inception3
+from torchvision.models import Inception3
 import numpy as np
 from tqdm import tqdm
 
-from inception import InceptionV3
-from dataset import MultiResolutionDataset
+from stylegan2.inception import InceptionV3
+from stylegan2.dataset import MultiResolutionDataset
 
 
 class Inception3Feature(Inception3):

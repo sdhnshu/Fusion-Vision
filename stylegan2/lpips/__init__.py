@@ -6,9 +6,9 @@ from __future__ import print_function
 import numpy as np
 from skimage.measure import compare_ssim
 import torch
-from torch.autograd import Variable
+# from torch.autograd import Variable
 
-from lpips import dist_model
+from stylegan2.lpips import dist_model
 
 
 class PerceptualLoss(torch.nn.Module):

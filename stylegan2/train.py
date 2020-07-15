@@ -3,31 +3,30 @@ import math
 import random
 import os
 
-import numpy as np
+# import numpy as np
 import torch
 from torch import nn, autograd, optim
 from torch.nn import functional as F
 from torch.utils import data
-import torch.distributed as dist
+# import torch.distributed as dist
 from torchvision import transforms, utils
 from tqdm import tqdm
 
 try:
     import wandb
-
 except ImportError:
     wandb = None
 
-from model import Generator, Discriminator
-from dataset import MultiResolutionDataset
-from distributed import (
+from stylegan2.model import Generator, Discriminator
+from stylegan2.dataset import MultiResolutionDataset
+from stylegan2.distributed import (
     get_rank,
     synchronize,
     reduce_loss_dict,
     reduce_sum,
     get_world_size,
 )
-from non_leaking import augment
+from stylegan2.non_leaking import augment
 
 
 def data_sampler(dataset, shuffle, distributed):
@@ -315,7 +314,7 @@ def train(args, loader, generator, discriminator, g_optim, d_optim, g_ema, devic
                     sample, _ = g_ema([sample_z])
                     utils.save_image(
                         sample,
-                        f"sample/{str(i).zfill(6)}.png",
+                        f"stylegan2/sample/{str(i).zfill(6)}.png",
                         nrow=int(args.n_sample ** 0.5),
                         normalize=True,
                         range=(-1, 1),
@@ -332,7 +331,7 @@ def train(args, loader, generator, discriminator, g_optim, d_optim, g_ema, devic
                         "args": args,
                         "ada_aug_p": ada_aug_p,
                     },
-                    f"checkpoint/{str(i).zfill(6)}.pt",
+                    f"stylegan2/checkpoint/{str(i).zfill(6)}.pt",
                 )
 
 
