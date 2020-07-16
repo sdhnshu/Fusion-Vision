@@ -130,3 +130,4 @@ dmypy.json
 .vscode
 wandb/
 .DS_Store
+cache/

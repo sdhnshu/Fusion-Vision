@@ -181,7 +181,8 @@ def compute(config, dump_name, instrumented_model):
     X_global_mean = None
 
     # Figure out batch size if not provided
-    B = config.batch_size or get_max_batch_size(inst, device, layer_key)
+    B = config.batch_size or (get_max_batch_size(
+        inst, device, layer_key) if device == 'cuda' else 1)
 
     # Divisible by B (ignored in output name)
     N = config.n // B * B

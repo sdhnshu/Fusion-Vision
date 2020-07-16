@@ -363,6 +363,27 @@ class ToRGB(nn.Module):
         return out
 
 
+class NamedTensor(nn.Module):
+    # Wrapper that gives name to tensor
+    def __init__(self):
+        super().__init__()
+
+    def forward(self, x):
+        return x
+
+
+class StridedStyle(nn.ModuleList):
+    # Give each style a unique name
+    def __init__(self, n_latents):
+        super().__init__([NamedTensor() for _ in range(n_latents)])
+        self.n_latents = n_latents
+
+    def forward(self, x):
+        # x already strided
+        styles = [self[i](x[:, i, :]) for i in range(self.n_latents)]
+        return torch.stack(styles, dim=1)
+
+
 class Generator(nn.Module):
     def __init__(
         self,
@@ -448,6 +469,7 @@ class Generator(nn.Module):
             in_channel = out_channel
 
         self.n_latent = self.log_size * 2 - 2
+        self.strided_style = StridedStyle(self.n_latent)
 
     def make_noise(self):
         device = self.input.input.device
@@ -478,11 +500,11 @@ class Generator(nn.Module):
         inject_index=None,
         truncation=1,
         truncation_latent=None,
-        input_is_latent=False,
+        input_is_w=False,
         noise=None,
         randomize_noise=True,
     ):
-        if not input_is_latent:
+        if not input_is_w:
             styles = [self.style(s) for s in styles]
 
         if noise is None:
@@ -503,7 +525,8 @@ class Generator(nn.Module):
 
             styles = style_t
 
-        if len(styles) < 2:
+        if len(styles) == 1:
+            # One global latent
             inject_index = self.n_latent
 
             if styles[0].ndim < 3:
@@ -512,14 +535,21 @@ class Generator(nn.Module):
             else:
                 latent = styles[0]
 
-        else:
+        elif len(styles) == 2:
+            # Latent mixing with two latents
             if inject_index is None:
                 inject_index = random.randint(1, self.n_latent - 1)
 
             latent = styles[0].unsqueeze(1).repeat(1, inject_index, 1)
             latent2 = styles[1].unsqueeze(1).repeat(1, self.n_latent - inject_index, 1)
 
-            latent = torch.cat([latent, latent2], 1)
+            latent = self.strided_style(torch.cat([latent, latent2], 1))
+        else:
+            # One latent per layer
+            assert len(
+                styles) == self.n_latent, f'Expected {self.n_latents} latents, got {len(styles)}'
+            styles = torch.stack(styles, dim=1)  # [N, 18, 512]
+            latent = self.strided_style(styles)
 
         out = self.input(latent)
         out = self.conv1(out, latent[:, 0], noise=noise[0])
