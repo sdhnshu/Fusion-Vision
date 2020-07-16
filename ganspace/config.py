@@ -56,6 +56,8 @@ class Config:
                             help='Sparsity parameter of SPCA')
         parser.add_argument('--video', dest='make_video', action='store_true',
                             help='Generate output videos (MP4s)')
+        parser.add_argument('--batch', dest='batch_mode', action='store_true',
+                            help="Don't open windows, instead save results to file")
         parser.add_argument('-b', dest='batch_size', type=int, default=None,
                             help='Minibatch size, leave empty for automatic detection')
         parser.add_argument('-c', dest='components', type=int, default=80,
