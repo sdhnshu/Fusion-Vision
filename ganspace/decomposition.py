@@ -1,31 +1,17 @@
-# Copyright 2020 Erik Härkönen. All rights reserved.
-# This file is licensed to you under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License. You may obtain a copy
-# of the License at http://www.apache.org/licenses/LICENSE-2.0
-
-# Unless required by applicable law or agreed to in writing, software distributed under
-# the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
-# OF ANY KIND, either express or implied. See the License for the specific language
-# governing permissions and limitations under the License.
-
-# Patch for broken CTRL+C handler
-# https://github.com/ContinuumIO/anaconda-issues/issues/905
-from models import get_instrumented_model
-from estimators import get_estimator
-from config import Config
-from netdissect.nethook import InstrumentedModel
+from ganspace.models import get_instrumented_model
+from ganspace.estimators import get_estimator
+from ganspace.netdissect.nethook import InstrumentedModel
 from tqdm import trange
-from scipy.cluster.vq import kmeans
 from types import SimpleNamespace
-import json
 import torch
-import argparse
 import datetime
 import sys
-import re
 from pathlib import Path
 import numpy as np
 import os
+
+# Patch for broken CTRL+C handler
+# https://github.com/ContinuumIO/anaconda-issues/issues/905
 os.environ['FOR_DISABLE_CONSOLE_CTRL_HANDLER'] = '1'
 
 
@@ -44,10 +30,9 @@ def get_random_dirs(components, dimensions):
     dirs /= np.sqrt(np.sum(dirs**2, axis=1, keepdims=True))
     return dirs.astype(np.float32)
 
-# Compute maximum batch size for given VRAM and network
-
 
 def get_max_batch_size(inst, device, layer_name=None):
+    # Compute maximum batch size for given VRAM and network
     inst.remove_edits()
 
     # Reset statistics
@@ -74,10 +59,9 @@ def get_max_batch_size(inst, device, layer_name=None):
 
     return B_max
 
-# Solve for directions in latent space that match PCs in activaiton space
-
 
 def linreg_lstsq(comp_np, mean_np, stdev_np, inst, config):
+    # Solve for directions in latent space that match PCs in activaiton space
     print('Performing least squares regression', flush=True)
 
     torch.manual_seed(SEED_LINREG)

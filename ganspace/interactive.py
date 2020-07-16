@@ -1,33 +1,24 @@
-# Copyright 2020 Erik Härkönen. All rights reserved.
-# This file is licensed to you under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License. You may obtain a copy
-# of the License at http://www.apache.org/licenses/LICENSE-2.0
-
-# Unless required by applicable law or agreed to in writing, software distributed under
-# the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
-# OF ANY KIND, either express or implied. See the License for the specific language
-# governing permissions and limitations under the License.
-
+################## Haven't tested yet, here for future reference ##################
 # An interactive glumpy (OpenGL) + tkinter viewer for interacting with principal components.
 # Requires OpenGL and CUDA support for rendering.
 
 import torch
 import numpy as np
 import tkinter as tk
-from tkinter import ttk
+# from tkinter import ttk
 from types import SimpleNamespace
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 from pathlib import Path
 from os import makedirs
-from models import get_instrumented_model
-from config import Config
-from decomposition import get_or_compute
-from torch.nn.functional import interpolate
-from TkTorchWindow import TorchImageView
+from ganspace.models import get_instrumented_model
+from ganspace.config import Config
+from ganspace.decomposition import get_or_compute
+# from torch.nn.functional import interpolate
+from ganspace.TkTorchWindow import TorchImageView
 from functools import partial
 from platform import system
 from PIL import Image
-from utils import pad_frames, prettify_name
+from ganspace.utils import pad_frames, prettify_name
 import pickle
 
 # For platform specific UI tweaks
@@ -41,20 +32,18 @@ args = Config().from_args()
 # Don't bother without GPU
 assert torch.cuda.is_available(), 'Interactive mode requires CUDA'
 
-# Use syntax from paper
-
 
 def get_edit_name(idx, s, e, name=None):
+    # Use syntax from paper
     return 'E({comp}, {edit_range}){edit_name}'.format(
         comp=idx,
         edit_range=f'{s}-{e}' if e > s else s,
         edit_name=f': {name}' if name else ''
     )
 
-# Load or compute PCA basis vectors
-
 
 def load_components(class_name, inst):
+    # Load or compute PCA basis vectors
     global components, state, use_named_latents
 
     config = args.from_dict({'output_class': class_name})
@@ -87,11 +76,10 @@ def load_components(class_name, inst):
     use_named_latents = False
     print('Loaded components for', class_name, 'from', dump_name)
 
-# Load previously exported named components from
-# directory specified with '--inputs=path/to/comp'
-
 
 def load_named_components(path, class_name):
+    # Load previously exported named components from
+    # directory specified with '--inputs=path/to/comp'
     global components, state, use_named_latents
 
     import glob
@@ -161,10 +149,9 @@ def setup_model():
     else:
         load_components(class_name, inst)
 
-# Project tensor 'X' onto orthonormal basis 'comp', return coordinates
-
 
 def project_ortho(X, comp):
+    # Project tensor 'X' onto orthonormal basis 'comp', return coordinates
     N = comp.shape[0]
     coords = (comp.reshape(N, -1) * X.reshape(-1)).sum(dim=1)
     return coords.reshape([N]+[1]*X.ndim)
@@ -388,10 +375,9 @@ def resample_latent(seed=None, only_style=False):
     # Remove focus from text entry
     canvas.focus_set()
 
-# Used to recompute after changing class of conditional model
-
 
 def recompute_components():
+    # Used to recompute after changing class of conditional model
     class_name = ui_state.outclass.get()
     if class_name.isnumeric():
         class_name = int(class_name)
@@ -405,10 +391,9 @@ def recompute_components():
 
     load_components(class_name, inst)
 
-# Used to detect parameter changes for lazy recomputation
-
 
 class ParamCache():
+    # Used to detect parameter changes for lazy recomputation
     def update(self, **kwargs):
         dirty = False
         for argname, val in kwargs.items():
@@ -508,10 +493,9 @@ def on_draw():
 
     app.draw(img)
 
-# Save necessary data to disk for later loading
-
 
 def export_direction(idx, button_frame):
+    # Save necessary data to disk for later loading
     name = tk.StringVar(value='')
     num_strips = tk.IntVar(value=0)
     strip_width = tk.IntVar(value=5)

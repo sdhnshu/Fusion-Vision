@@ -1,19 +1,9 @@
-# Copyright 2020 Erik Härkönen. All rights reserved.
-# This file is licensed to you under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License. You may obtain a copy
-# of the License at http://www.apache.org/licenses/LICENSE-2.0
-
-# Unless required by applicable law or agreed to in writing, software distributed under
-# the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
-# OF ANY KIND, either express or implied. See the License for the specific language
-# governing permissions and limitations under the License.
-
 import string
 import numpy as np
 from pathlib import Path
 import requests
-import pickle
-import sys
+# import pickle
+# import sys
 import re
 
 
@@ -21,12 +11,11 @@ def prettify_name(name):
     valid = "-_%s%s" % (string.ascii_letters, string.digits)
     return ''.join(map(lambda c: c if c in valid else '_', name))
 
-# Add padding to sequence of images
-# Used in conjunction with np.hstack/np.vstack
-# By default: adds one 64th of the width of horizontal padding
-
 
 def pad_frames(strip, pad_fract_horiz=64, pad_fract_vert=0, pad_value=None):
+    # Add padding to sequence of images
+    # Used in conjunction with np.hstack/np.vstack
+    # By default: adds one 64th of the width of horizontal padding
     dtype = strip[0].dtype
     if pad_value is None:
         if dtype in [np.float32, np.float64]:

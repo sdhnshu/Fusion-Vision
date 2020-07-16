@@ -1,13 +1,4 @@
-# Copyright 2020 Erik Härkönen. All rights reserved.
-# This file is licensed to you under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License. You may obtain a copy
-# of the License at http://www.apache.org/licenses/LICENSE-2.0
-
-# Unless required by applicable law or agreed to in writing, software distributed under
-# the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
-# OF ANY KIND, either express or implied. See the License for the specific language
-# governing permissions and limitations under the License.
-
+################## Haven't tested yet, here for future reference ##################
 import tkinter as tk
 import numpy as np
 import time
@@ -41,10 +32,9 @@ def create_shared_texture(w, h, c=4,
         int(tex.handle), tex.target, map_flags)
     return tex, cuda_buffer
 
-# Shape batch as square if possible
-
 
 def get_grid_dims(B):
+    # Shape batch as square if possible
     S = int(B**0.5 + 0.5)
     while B % S != 0:
         S -= 1
@@ -62,10 +52,9 @@ def create_gl_texture(tensor_shape):
 
     return tex, cuda_buffer
 
-# Create window with OpenGL context
-
 
 class TorchImageView(OpenGLFrame):
+    # Create window with OpenGL context
     def __init__(self, root=None, show_fps=True, **kwargs):
         self.root = root or tk.Tk()
         self.width = kwargs.get('width', 512)

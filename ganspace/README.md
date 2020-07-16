@@ -1,6 +1,6 @@
-# [GANSpace: Discovering Interpretable GAN Controls](https://github.com/harskish/ganspace) forked at bf462eef453739bfe976d9de3330a120054514bf
-![Python 3.7](https://img.shields.io/badge/python-3.7-green.svg)
-![PyTorch 1.3](https://img.shields.io/badge/pytorch-1.3-green.svg)
+# GANSpace: Discovering Interpretable GAN Controls
+This is a fork of [Erik Härkönen's repo](https://github.com/harskish/ganspace) forked at bf462eef453739bfe976d9de3330a120054514bf on master. Below is a part of the original README.
+
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/harskish/ganspace/blob/master/notebooks/Ganspace_colab.ipynb)
 ![teaser](teaser.jpg)
 <p align="justify"><b>Figure 1:</b> Sequences of image edits performed using control discovered with our method, applied to three different GANs. The white insets specify the particular edits using notation explained in Section 3.4 ('Layer-wise Edits').</p>

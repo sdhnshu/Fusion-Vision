@@ -1,9 +1,18 @@
-flake8
-autopep8
+# For Stylegan2 inference
 torch==1.5.1
 torchvision==0.6.1
 scikit-image==0.17.2
 tqdm==4.47.0
+
+# Ganspace
+easydict==1.9
+sklearn==0.0
+
+# Standards
+flake8
+autopep8
+
+# For Stylegan2 training
 # lmdb==0.98
 # requests==2.24.0
 # wandb

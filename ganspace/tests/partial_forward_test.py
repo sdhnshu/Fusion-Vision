@@ -1,21 +1,11 @@
-# Copyright 2020 Erik Härkönen. All rights reserved.
-# This file is licensed to you under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License. You may obtain a copy
-# of the License at http://www.apache.org/licenses/LICENSE-2.0
-
-# Unless required by applicable law or agreed to in writing, software distributed under
-# the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
-# OF ANY KIND, either express or implied. See the License for the specific language
-# governing permissions and limitations under the License.
-
-import torch, numpy as np
-from types import SimpleNamespace
+from ganspace.models import get_instrumented_model
+import torch
+import numpy as np
+# from types import SimpleNamespace
 import itertools
-
 import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
-from models import get_instrumented_model
 
 
 SEED = 1369
@@ -34,7 +24,7 @@ def compare(model, layer, z1, z2):
     inst._retained[layer] = None
     with torch.no_grad():
         model.partial_forward(z1, layer)
-    
+
     assert inst._retained[layer] is not None, 'Layer not retained (partial)'
     feat_partial = inst._retained[layer].cpu().numpy().copy().reshape(-1)
 
@@ -44,7 +34,7 @@ def compare(model, layer, z1, z2):
     inst._retained[layer] = None
     with torch.no_grad():
         model.forward(z2)
-    
+
     assert inst._retained[layer] is not None, 'Layer not retained (full)'
     feat_full = inst.retained_features()[layer].cpu().numpy().copy().reshape(-1)
 
@@ -56,7 +46,7 @@ configs = []
 
 # StyleGAN2
 models = ['StyleGAN2']
-layers = ['convs.0',]
+layers = ['convs.0', ]
 classes = ['cat', 'ffhq']
 configs.append(itertools.product(models, layers, classes))
 
@@ -107,7 +97,6 @@ for config in configs:
             feat2 = inst._retained[layer].reshape(-1)
             diff = torch.sum(torch.abs(feat1 - feat2))
             assert diff < 1e-8, f'Layer {layer} output contains randomness, diff={diff}'
-    
 
         # Test positive
         torch.manual_seed(SEED)

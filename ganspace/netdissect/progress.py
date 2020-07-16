@@ -1,14 +1,4 @@
-'''
-Utilities for showing progress bars, controlling default verbosity, etc.
-'''
-
-# If the tqdm package is not available, then do not show progress bars;
-# just connect print_progress to print.
-try:
-    from tqdm import tqdm, tqdm_notebook
-except:
-    tqdm = None
-
+from tqdm import tqdm, tqdm_notebook
 default_verbosity = False
 
 

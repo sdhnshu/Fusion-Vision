@@ -5,10 +5,10 @@ Modified by Erik Härkönen, 29.11.2019
 
 import numbers
 import torch
-from netdissect.autoeval import autoimport_eval
-from netdissect.progress import print_progress
-from netdissect.nethook import InstrumentedModel
-from netdissect.easydict import EasyDict
+from ganspace.netdissect.autoeval import autoimport_eval
+from ganspace.netdissect.progress import print_progress
+from ganspace.netdissect.nethook import InstrumentedModel
+from easydict import EasyDict
 
 
 def create_instrumented_model(args, **kwargs):

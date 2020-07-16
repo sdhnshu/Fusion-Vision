@@ -1,24 +1,15 @@
-# Copyright 2020 Erik Härkönen. All rights reserved.
-# This file is licensed to you under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License. You may obtain a copy
-# of the License at http://www.apache.org/licenses/LICENSE-2.0
-
-# Unless required by applicable law or agreed to in writing, software distributed under
-# the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
-# OF ANY KIND, either express or implied. See the License for the specific language
-# governing permissions and limitations under the License.
-
 import torch
 import numpy as np
-import re
+# import re
 import os
 import random
 from pathlib import Path
 from types import SimpleNamespace
-from utils import download_ckpt
-from netdissect import proggan, zdataset
-from . import stylegan2
+from ganspace.utils import download_ckpt
+# from netdissect import proggan, zdataset
+import stylegan2.model as stylegan2
 from abc import abstractmethod, ABC as AbstractBaseClass
+from ganspace.netdissect.modelconfig import create_instrumented_model
 
 
 class BaseModel(AbstractBaseClass, torch.nn.Module):
@@ -90,8 +81,6 @@ class BaseModel(AbstractBaseClass, torch.nn.Module):
     def named_modules(self, *args, **kwargs):
         return self.model.named_modules(*args, **kwargs)
 
-# PyTorch port of StyleGAN 2
-
 
 class StyleGAN2(BaseModel):
     def __init__(self, device, class_name, truncation=1.0, use_w=False):
@@ -116,7 +105,8 @@ class StyleGAN2(BaseModel):
         }
 
         assert self.outclass in configs, \
-            f'Invalid StyleGAN2 class {self.outclass}, should be one of [{", ".join(configs.keys())}]'
+            f'Invalid StyleGAN2 class {self.outclass}, \
+                should be one of [{", ".join(configs.keys())}]'
 
         self.resolution = configs[self.outclass]
         self.name = f'StyleGAN2-{self.outclass}'
@@ -189,7 +179,9 @@ class StyleGAN2(BaseModel):
     def forward(self, x):
         x = x if isinstance(x, list) else [x]
         out, _ = self.model(x, noise=self.noise,
-                            truncation=self.truncation, truncation_latent=self.latent_avg, input_is_w=self.w_primary)
+                            truncation=self.truncation, truncation_latent=self.latent_avg,
+                            input_is_w=self.w_primary
+                            )
         return 0.5*(out+1)
 
     def partial_forward(self, x, layer_name):
@@ -217,7 +209,8 @@ class StyleGAN2(BaseModel):
         else:
             # One latent per layer
             assert len(
-                styles) == self.model.n_latent, f'Expected {self.model.n_latents} latents, got {len(styles)}'
+                styles) == self.model.n_latent, \
+                f'Expected {self.model.n_latents} latents, got {len(styles)}'
             styles = torch.stack(styles, dim=1)  # [N, 18, 512]
             latent = self.model.strided_style(styles)
 
@@ -317,7 +310,6 @@ def get_instrumented_model(name, output_class, layers, device, **kwargs):
     if hasattr(model, 'use_z'):
         model.use_z()
 
-    from netdissect.modelconfig import create_instrumented_model
     inst = create_instrumented_model(SimpleNamespace(
         model=model,
         layers=layers,

@@ -1,4 +1,7 @@
 # Fusion Vision:
+![Python 3.8](https://img.shields.io/badge/python-3.8-blue.svg)
+![PyTorch 1.5](https://img.shields.io/badge/pytorch-1.5-blue.svg)
+
 -- OPEN IN COLAB LINK for artists who can code and want to utilize a GPU
 
 The idea behind this project is to build an end-to-end application where the user can control a novel image creation process by feeding in an audio snippet.
@@ -13,6 +16,10 @@ The latent spaces of a generative adversarial network called [StyleGAN2](https:/
 
 # How can I set it up?
 See [SETUP.md](SETUP.md)
+
+# Notebooks
+
+- Convert official tensorflow checkpoints to torch [weights_tf_to_pt.ipynb](notebooks/weights_tf_to_pt.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/sdhnshu/Fusion-Vision/blob/master/weights_tf_to_pt.ipynb)
 
 # Credits
 - [Goku Mohandas](https://github.com/GokuMohandas/GokuMohandas) for the [summer 2020 incubator](https://madewithml.com/collections/7828/ds-incubator-summer-2020/)

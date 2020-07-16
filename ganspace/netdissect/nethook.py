@@ -1,14 +1,3 @@
-'''
-Utilities for instrumenting a torch model.
-
-InstrumentedModel will wrap a pytorch model and allow hooking
-arbitrary layers to monitor or modify their output directly.
-
-Modified by Erik Härkönen:
-- 29.11.2019: Unhooking bugfix
-- 25.01.2020: Offset edits, removed old API
-'''
-
 import torch
 import numpy
 import types

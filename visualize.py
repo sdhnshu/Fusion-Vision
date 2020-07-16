@@ -1,44 +1,29 @@
-# Copyright 2020 Erik Härkönen. All rights reserved.
-# This file is licensed to you under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License. You may obtain a copy
-# of the License at http://www.apache.org/licenses/LICENSE-2.0
-
-# Unless required by applicable law or agreed to in writing, software distributed under
-# the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
-# OF ANY KIND, either express or implied. See the License for the specific language
-# governing permissions and limitations under the License.
-
-# Patch for broken CTRL+C handler
-# https://github.com/ContinuumIO/anaconda-issues/issues/905
 import numpy as np
-import json
 import torch
-from utils import pad_frames
-from decomposition import get_random_dirs, get_or_compute, get_max_batch_size, SEED_VISUALIZATION
-from config import Config
+from ganspace.utils import pad_frames
+from ganspace.decomposition import get_random_dirs, get_or_compute, get_max_batch_size
+from ganspace.decomposition import SEED_VISUALIZATION
+from ganspace.config import Config
 from tqdm import trange
-import argparse
 import datetime
-import sys
-import re
-from scipy.cluster.vq import kmeans
-from models import get_instrumented_model
-from estimators import get_estimator
-from netdissect.modelconfig import create_instrumented_model
-from netdissect import proggan, nethook, easydict, zdataset
+from ganspace.models import get_instrumented_model
+from ganspace.estimators import get_estimator
 from PIL import Image
 from os import makedirs
 from pathlib import Path
 import matplotlib.pyplot as plt
 from types import SimpleNamespace
 import os
+
+# Patch for broken CTRL+C handler
+# https://github.com/ContinuumIO/anaconda-issues/issues/905
 os.environ['FOR_DISABLE_CONSOLE_CTRL_HANDLER'] = '1'
 
 
-def x_closest(p):
-    distances = np.sqrt(np.sum((X - p)**2, axis=-1))
-    idx = np.argmin(distances)
-    return distances[idx], X[idx]
+# def x_closest(p):
+#     distances = np.sqrt(np.sum((X - p)**2, axis=-1))
+#     idx = np.argmin(distances)
+#     return distances[idx], X[idx]
 
 
 def make_gif(imgs, duration_secs, outname):
@@ -81,8 +66,10 @@ def make_mp4(imgs, duration_secs, outname):
             raise sp.CalledProcessError(p.returncode, command)
 
 
-def make_grid(latent, lat_mean, lat_comp, lat_stdev, act_mean, act_comp, act_stdev, scale=1, n_rows=10, n_cols=5, make_plots=True, edit_type='latent'):
-    from notebooks.notebook_utils import create_strip_centered
+def make_grid(latent, lat_mean, lat_comp, lat_stdev, act_mean,
+              act_comp, act_stdev, scale=1, n_rows=10, n_cols=5,
+              make_plots=True, edit_type='latent'):
+    from ganspace.notebooks.notebook_utils import create_strip_centered
 
     inst.remove_edits()
     x_range = np.linspace(-scale, scale, n_cols, dtype=np.float32)  # scale in sigmas
@@ -91,7 +78,8 @@ def make_grid(latent, lat_mean, lat_comp, lat_stdev, act_mean, act_comp, act_std
     for r in range(n_rows):
         curr_row = []
         out_batch = create_strip_centered(inst, edit_type, layer_key, [latent],
-                                          act_comp[r], lat_comp[r], act_stdev[r], lat_stdev[r], act_mean, lat_mean, scale, 0, -1, n_cols)[0]
+                                          act_comp[r], lat_comp[r], act_stdev[r], lat_stdev[r],
+                                          act_mean, lat_mean, scale, 0, -1, n_cols)[0]
         for i, img in enumerate(out_batch):
             curr_row.append(('c{}_{:.2f}'.format(r, x_range[i]), img))
 
@@ -125,16 +113,36 @@ def make_grid(latent, lat_mean, lat_comp, lat_stdev, act_mean, act_comp, act_std
     return [img for row in rows for img in row]
 
 
-######################
-# Visualize results
-######################
+def get_edit_name(mode):
+    if mode == 'activation':
+        is_stylegan = 'StyleGAN' in args.model
+        is_w = layer_key in ['style', 'g_mapping']
+        return 'W' if (is_stylegan and is_w) else 'ACT'
+    elif mode == 'latent':
+        return model.latent_space_name()
+    elif mode == 'both':
+        return 'BOTH'
+    else:
+        raise RuntimeError(f'Unknown edit mode {mode}')
+
+
+def show():
+    if args.batch_mode:
+        plt.close('all')
+    else:
+        plt.show()
+
+
+def timestamp():
+    return datetime.datetime.now().strftime("%d.%m %H:%M")
+
 
 if __name__ == '__main__':
-    global max_batch, sample_shape, feature_shape, inst, args, layer_key, model
+    global inst, args, layer_key, model
 
     args = Config().from_args()
     t_start = datetime.datetime.now()
-    def timestamp(): return datetime.datetime.now().strftime("%d.%m %H:%M")
+
     print(f'[{timestamp()}] {args.model}, {args.layer}, {args.estimator}')
 
     # Ensure reproducibility
@@ -202,12 +210,6 @@ if __name__ == '__main__':
     max_batch = args.batch_size or (get_max_batch_size(inst, device) if has_gpu else 1)
     print('Batch size:', max_batch)
 
-    def show():
-        if args.batch_mode:
-            plt.close('all')
-        else:
-            plt.show()
-
     print(f'[{timestamp()}] Creating visualizations')
 
     # Ensure visualization gets new samples
@@ -227,18 +229,6 @@ if __name__ == '__main__':
     sparsity = np.mean(X_comp == 0)  # percentage of zero values in components
     print(f'Sparsity: {sparsity:.2f}')
 
-    def get_edit_name(mode):
-        if mode == 'activation':
-            is_stylegan = 'StyleGAN' in args.model
-            is_w = layer_key in ['style', 'g_mapping']
-            return 'W' if (is_stylegan and is_w) else 'ACT'
-        elif mode == 'latent':
-            return model.latent_space_name()
-        elif mode == 'both':
-            return 'BOTH'
-        else:
-            raise RuntimeError(f'Unknown edit mode {mode}')
-
     # Only visualize applicable edit modes
     if args.use_w and layer_key in ['style', 'g_mapping']:
         edit_modes = ['latent']  # activation edit is the same
@@ -249,9 +239,12 @@ if __name__ == '__main__':
     for edit_mode in edit_modes:
         plt.figure(figsize=(14, 12))
         plt.suptitle(
-            f"{args.estimator.upper()}: {model.name} - {layer_name}, {get_edit_name(edit_mode)} edit", size=16)
-        make_grid(tensors.Z_global_mean, tensors.Z_global_mean, tensors.Z_comp, tensors.Z_stdev, tensors.X_global_mean,
-                  tensors.X_comp, tensors.X_stdev, scale=args.sigma, edit_type=edit_mode, n_rows=14)
+            f"{args.estimator.upper()}: {model.name} - {layer_name}, \
+                {get_edit_name(edit_mode)} edit", size=16)
+        make_grid(tensors.Z_global_mean, tensors.Z_global_mean,
+                  tensors.Z_comp, tensors.Z_stdev, tensors.X_global_mean,
+                  tensors.X_comp, tensors.X_stdev, scale=args.sigma,
+                  edit_type=edit_mode, n_rows=14)
         plt.savefig(outdir_summ / f'components_{get_edit_name(edit_mode)}.jpg', dpi=300)
         show()
 
@@ -263,8 +256,13 @@ if __name__ == '__main__':
         for sigma in [args.sigma, 3*args.sigma]:
             for c in range(components):
                 for edit_mode in edit_modes:
-                    frames = make_grid(tensors.Z_global_mean, tensors.Z_global_mean, tensors.Z_comp[c:c+1, :, :], tensors.Z_stdev[c:c+1], tensors.X_global_mean,
-                                       tensors.X_comp[c:c+1, :, :], tensors.X_stdev[c:c+1], n_rows=1, n_cols=instances, scale=sigma, make_plots=False, edit_type=edit_mode)
+                    frames = make_grid(tensors.Z_global_mean, tensors.Z_global_mean,
+                                       tensors.Z_comp[c: c + 1, :, :], tensors.Z_stdev[c: c + 1],
+                                       tensors.X_global_mean,
+                                       tensors.X_comp[c: c + 1, :, :],
+                                       tensors.X_stdev[c: c + 1], n_rows=1,
+                                       n_cols=instances, scale=sigma, make_plots=False,
+                                       edit_type=edit_mode)
                     plt.close('all')
 
                     frames = [x for _, x in frames]
@@ -282,9 +280,12 @@ if __name__ == '__main__':
     for edit_mode in edit_modes:
         plt.figure(figsize=(14, 12))
         plt.suptitle(
-            f"{model.name} - {layer_name}, random directions w/ PC stdevs, {get_edit_name(edit_mode)} edit", size=16)
-        make_grid(tensors.Z_global_mean, tensors.Z_global_mean, random_dirs_z, tensors.Z_stdev,
-                  tensors.X_global_mean, random_dirs_act, tensors.X_stdev, scale=args.sigma, edit_type=edit_mode, n_rows=14)
+            f"{model.name} - {layer_name}, random directions w/ PC stdevs, \
+                {get_edit_name(edit_mode)} edit", size=16)
+        make_grid(tensors.Z_global_mean, tensors.Z_global_mean,
+                  random_dirs_z, tensors.Z_stdev,
+                  tensors.X_global_mean, random_dirs_act, tensors.X_stdev,
+                  scale=args.sigma, edit_type=edit_mode, n_rows=14)
         plt.savefig(outdir_summ / f'random_dirs_{get_edit_name(edit_mode)}.jpg', dpi=300)
         show()
 
@@ -293,16 +294,19 @@ if __name__ == '__main__':
     latents = model.sample_latent(n_samples=n_random_imgs)
 
     for img_idx in trange(n_random_imgs, desc='Random images', ascii=True):
-        #print(f'Creating visualizations for random image {img_idx+1}/{n_random_imgs}')
+        # print(f'Creating visualizations for random image {img_idx+1}/{n_random_imgs}')
         z = latents[img_idx][None, ...]
 
         # Summary grid, real components
         for edit_mode in edit_modes:
             plt.figure(figsize=(14, 12))
             plt.suptitle(
-                f"{args.estimator.upper()}: {model.name} - {layer_name}, {get_edit_name(edit_mode)} edit", size=16)
-            make_grid(z, tensors.Z_global_mean, tensors.Z_comp, tensors.Z_stdev,
-                      tensors.X_global_mean, tensors.X_comp, tensors.X_stdev, scale=args.sigma, edit_type=edit_mode, n_rows=14)
+                f"{args.estimator.upper()}: {model.name} - {layer_name}, \
+                    {get_edit_name(edit_mode)} edit", size=16)
+            make_grid(z, tensors.Z_global_mean, tensors.Z_comp,
+                      tensors.Z_stdev,
+                      tensors.X_global_mean, tensors.X_comp,
+                      tensors.X_stdev, scale=args.sigma, edit_type=edit_mode, n_rows=14)
             plt.savefig(outdir_summ / f'samp{img_idx}_real_{get_edit_name(edit_mode)}.jpg', dpi=300)
             show()
 
@@ -313,14 +317,18 @@ if __name__ == '__main__':
             # One reasonable, one over the top
             for sigma in [args.sigma, 3*args.sigma]:  # [2, 5]:
                 for edit_mode in edit_modes:
-                    imgs = make_grid(z, tensors.Z_global_mean, tensors.Z_comp, tensors.Z_stdev, tensors.X_global_mean, tensors.X_comp, tensors.X_stdev,
-                                     n_rows=components, n_cols=instances, scale=sigma, make_plots=False, edit_type=edit_mode)
+                    imgs = make_grid(z, tensors.Z_global_mean, tensors.Z_comp,
+                                     tensors.Z_stdev, tensors.X_global_mean, tensors.X_comp,
+                                     tensors.X_stdev,
+                                     n_rows=components, n_cols=instances, scale=sigma,
+                                     make_plots=False, edit_type=edit_mode)
                     plt.close('all')
 
                     for c in range(components):
                         frames = [x for _, x in imgs[c*instances:(c+1)*instances]]
                         frames = frames + frames[::-1]
                         make_mp4(frames, 5, outdir_inst /
-                                 f'{get_edit_name(edit_mode)}_sigma{sigma}_img{img_idx}_comp{c}.mp4')
+                                 f'{get_edit_name(edit_mode)}_sigma{sigma}_img\
+                                     {img_idx}_comp{c}.mp4')
 
     print('Done in', datetime.datetime.now() - t_start)

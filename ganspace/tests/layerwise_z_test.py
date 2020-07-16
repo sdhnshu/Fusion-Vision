@@ -1,27 +1,17 @@
-# Copyright 2020 Erik Härkönen. All rights reserved.
-# This file is licensed to you under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License. You may obtain a copy
-# of the License at http://www.apache.org/licenses/LICENSE-2.0
-
-# Unless required by applicable law or agreed to in writing, software distributed under
-# the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
-# OF ANY KIND, either express or implied. See the License for the specific language
-# governing permissions and limitations under the License.
-
-import torch, numpy as np
-from types import SimpleNamespace
-import itertools
-
+# from ganspace.config import Config
+from ganspace.models import get_model
+import torch
+import numpy as np
+# from types import SimpleNamespace
+# import itertools
 import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
-from models import get_model
-from config import Config
 
 torch.backends.cudnn.benchmark = True
 has_gpu = torch.cuda.is_available()
 device = torch.device('cuda' if has_gpu else 'cpu')
-B = 2 # test batch support
+B = 2  # test batch support
 
 models = [
     ('BigGAN-128', 'husky'),
@@ -38,8 +28,8 @@ for model_name, classname in models:
 
         n_latents = model.get_max_latents()
         assert n_latents > 1, 'Model reports max_latents=1'
-    
-        #if hasattr(model, 'use_w'):
+
+        # if hasattr(model, 'use_w'):
         #    model.use_w()
 
         seed = 1234
@@ -60,16 +50,14 @@ for model_name, classname in models:
             torch.manual_seed(0)
             np.random.seed(0)
             out1 = model.forward(z)
-            
+
             torch.manual_seed(0)
             np.random.seed(0)
             out2 = model.forward(n_latents*[z])
-        
+
             dist_rel = (torch.abs(out1 - out2).sum() / out1.sum()).item()
             assert dist_rel < 1e-3, f'Layerwise latent mode working incorrectly for model {model_name}-{classname}: difference = {dist_rel*100}%'
-            
+
             print('.', end='')
-    
+
     print('OK!')
-
-

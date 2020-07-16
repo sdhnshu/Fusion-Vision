@@ -1,17 +1,5 @@
-# [StyleGAN 2 in PyTorch](https://github.com/rosinality/stylegan2-pytorch) forked at 609911be93f8e7bb5ad3277dbcaf3fc66a7f472c
-
-Implementation of Analyzing and Improving the Image Quality of StyleGAN (https://arxiv.org/abs/1912.04958) in PyTorch
-
-## Notice
-
-I have tried to match official implementation as close as possible, but maybe there are some details I missed. So please use this implementation with care.
-
-## Requirements
-
-I have tested on:
-
-* PyTorch 1.3.1
-* CUDA 10.1/10.2
+# StyleGAN2 in PyTorch
+This is a fork of [Kim Seonghyeon's repo](https://github.com/rosinality/stylegan2-pytorch) at 609911be93f8e7bb5ad3277dbcaf3fc66a7f472c on master. Below is a part of the original README.
 
 ## Usage
 
@@ -29,9 +17,9 @@ train.py supports Weights & Biases logging. If you want to use it, add --wandb a
 
 ### Convert weight from official checkpoints
 
-You need to clone official repositories, (https://github.com/NVlabs/stylegan2) as it is requires for load official checkpoints.
+You need to clone the official repository (https://github.com/NVlabs/stylegan2) as it is requires for load official checkpoints.
 
-For example, if you cloned repositories in ~/stylegan2 and downloaded stylegan2-ffhq-config-f.pkl, You can convert it like this:
+For example, if you cloned repository in ~/stylegan2 and downloaded stylegan2-ffhq-config-f.pkl, You can convert it like this:
 
 > python convert_weight.py --repo ~/stylegan2 stylegan2-ffhq-config-f.pkl
 
@@ -41,7 +29,7 @@ This will create converted stylegan2-ffhq-config-f.pt file.
 
 > python generate.py --sample N_FACES --pics N_PICS --ckpt PATH_CHECKPOINT
 
-You should change your size (--size 256 for example) if you train with another dimension.
+You should change your size (--size 256 for example) if you trained with another dimension.
 
 ### Project images to latent spaces
 
@@ -65,34 +53,16 @@ For example,
 
 Will generate 10 random samples, and samples generated from latents that moved along 19th eigenvector with size/degree +-5.
 
-![Sample of closed form factorization](factor_index-13_degree-5.0.png)
+## Requirements
+* PyTorch 1.3.1
+* CUDA 10.1/10.2
+
 
 ## Pretrained Checkpoints
 
 [Link](https://drive.google.com/open?id=1PQutd-JboOCOZqmd95XWxWrO8gGEvRcO)
 
 I have trained the 256px model on FFHQ 550k iterations. I got FID about 4.5. Maybe data preprocessing, resolution, training loop could made this difference, but currently I don't know the exact reason of FID differences.
-
-## Samples
-
-![Sample with truncation](doc/sample.png)
-
-Sample from FFHQ. At 110,000 iterations. (trained on 3.52M images)
-
-![MetFaces sample with non-leaking augmentations](doc/sample-metfaces.png)
-
-Sample from MetFaces with Non-leaking augmentations. At 150,000 iterations. (trained on 4.8M images)
-
-
-### Samples from converted weights
-
-![Sample from FFHQ](doc/stylegan2-ffhq-config-f.png)
-
-Sample from FFHQ (1024px)
-
-![Sample from LSUN Church](doc/stylegan2-church-config-f.png)
-
-Sample from LSUN Church (256px)
 
 ## License
 
