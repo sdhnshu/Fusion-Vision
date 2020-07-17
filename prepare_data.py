@@ -74,7 +74,7 @@ if __name__ == '__main__':
 
     sizes = [int(s.strip()) for s in args.size.split(',')]
 
-    print(f'Make dataset of image sizes:', ', '.join(str(s) for s in sizes))
+    print('Make dataset of image sizes:', ', '.join(str(s) for s in sizes))
 
     imgset = datasets.ImageFolder(args.path)
 

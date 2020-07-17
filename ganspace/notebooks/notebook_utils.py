@@ -4,9 +4,9 @@ import numpy as np
 from os import makedirs
 from PIL import Image
 
-import sys
-from pathlib import Path
-sys.path.insert(0, str(Path(__file__).parent.parent))
+# import sys
+# from pathlib import Path
+# sys.path.insert(0, str(Path(__file__).parent.parent))
 
 
 def create_strip(inst, mode, layer, latents, x_comp, z_comp, act_stdev,

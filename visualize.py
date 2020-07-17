@@ -143,7 +143,7 @@ if __name__ == '__main__':
     args = Config().from_args()
     t_start = datetime.datetime.now()
 
-    print(f'[{timestamp()}] {args.model}, {args.layer}, {args.estimator}')
+    print(f'[{timestamp()}] Model:{args.model}, Layer:{args.layer}, Estimator:{args.estimator}')
 
     # Ensure reproducibility
     torch.manual_seed(0)  # also sets cuda seeds
@@ -157,9 +157,6 @@ if __name__ == '__main__':
     device = torch.device('cuda' if has_gpu else 'cpu')
     layer_key = args.layer
     layer_name = layer_key  # layer_key.lower().split('.')[-1]
-
-    basedir = Path(__file__).parent.resolve()
-    outdir = basedir / 'out'
 
     # Load model
     inst = get_instrumented_model(args.model, args.output_class,
@@ -217,6 +214,7 @@ if __name__ == '__main__':
     np.random.seed(SEED_VISUALIZATION)
 
     # Make output directories
+    outdir = Path(__file__).parent.resolve() / 'ganspace' / 'out'
     est_id = f'spca_{args.sparsity}' if args.estimator == 'spca' else args.estimator
     outdir_comp = outdir/model.name/layer_key.lower()/est_id/'comp'
     outdir_inst = outdir/model.name/layer_key.lower()/est_id/'inst'

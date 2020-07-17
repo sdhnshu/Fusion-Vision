@@ -1,41 +1,10 @@
 # GANSpace: Discovering Interpretable GAN Controls
 This is a fork of [Erik Härkönen's repo](https://github.com/harskish/ganspace) forked at bf462eef453739bfe976d9de3330a120054514bf on master. Below is a part of the original README.
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/harskish/ganspace/blob/master/notebooks/Ganspace_colab.ipynb)
-![teaser](teaser.jpg)
-<p align="justify"><b>Figure 1:</b> Sequences of image edits performed using control discovered with our method, applied to three different GANs. The white insets specify the particular edits using notation explained in Section 3.4 ('Layer-wise Edits').</p>
-
-
-> **GANSpace: Discovering Interpretable GAN Controls**<br>
-> Erik Härkönen<sup>1,2</sup>, Aaron Hertzmann<sup>2</sup>, Jaakko Lehtinen<sup>1,3</sup>, Sylvain Paris<sup>2</sup><br>
-> <sup>1</sup>Aalto University, <sup>2</sup>Adobe Research, <sup>3</sup>NVIDIA<br>
-> https://arxiv.org/abs/2004.02546
->
 > <p align="justify"><b>Abstract:</b> <i>This paper describes a simple technique to analyze Generative Adversarial Networks (GANs) and create interpretable controls for image synthesis, such as change of viewpoint, aging, lighting, and time of day. We identify important latent directions based on Principal Components Analysis (PCA) applied in activation space. Then, we show that interpretable edits can be defined based on layer-wise application of these edit directions. Moreover, we show that BigGAN can be controlled with layer-wise inputs in a StyleGAN-like manner. A user may identify a large number of interpretable controls with these mechanisms. We demonstrate results on GANs from various datasets.</i></p>
 > <p align="justify"><b>Video:</b>
 > https://youtu.be/jdTICDa_eAI
 
-## Setup
-See the [setup instructions](SETUP.md).
-
-## Usage
-This repository includes versions of BigGAN, StyleGAN, and StyleGAN2 modified to support per-layer latent vectors.
-
-**Interactive model exploration**
-```
-# Explore BigGAN-deep husky
-python interactive.py --model=BigGAN-512 --class=husky --layer=generator.gen_z -n=1000000
-
-# Explore StyleGAN2 ffhq in W space
-python interactive.py --model=StyleGAN2 --class=ffhq --layer=style --use_w -n=1000000 -b=10000
-
-# Explore StyleGAN2 cars in Z space
-python interactive.py --model=StyleGAN2 --class=car --layer=style -n=1000000 -b=10000
-```
-```
-# Apply previously saved edits interactively
-python interactive.py --model=StyleGAN2 --class=ffhq --layer=style --use_w --inputs=out/directions
-```
 
 **Visualize principal components**
 ```
@@ -60,35 +29,10 @@ Command line paramaters:
   -c           number of components to keep
 ```
 
-## Reproducibility
-All the figures presented in the paper can be recreated using the included Jupyter notebooks:
-* Figure 1: `figure_teaser.ipynb`
-* Figure 2: `figure_pca_illustration.ipynb`
-* Figure 3: `figure_pca_cleanup.ipynb`
-* Figure 4: `figure_steerability_comp.ipynb`
-* Figure 5: `figure_biggan_edit_transferability.ipynb`
-* Figure 6: `figure_biggan_style_mixing.ipybb`
-* Figure 7: `figure_biggan_style_resampling.ipynb`
-* Figure 8: `figure_edit_zoo.ipynb`
-
-## Known issues
-* The interactive viewer sometimes freezes on startup on Ubuntu 18.04. The freeze is resolved by clicking on the terminal window and pressing the control key. Any insight into the issue would be greatly appreciated!
-
-## Integrating a new model
-1. Create a wrapper for the model in `models/wrappers.py` using the `BaseModel` interface.
-2. Add the model to `get_model()` in `models/wrappers.py`.
-
-## Importing StyleGAN checkpoints from TensorFlow
-It is possible to import trained StyleGAN and StyleGAN2 weights from TensorFlow into GANSpace.
-
-### StyleGAN
-1. Install TensorFlow: `conda install tensorflow-gpu=1.*`.
-2. Modify methods `__init__()`, `load_model()` in `models/wrappers.py` under class StyleGAN.
-
-### StyleGAN2
-1. Follow the instructions [here](https://github.com/harskish/stylegan2-pytorch/blob/master/README.md#convert-weight-from-official-checkpoints). Make sure to use the forked repository in the conversion for compatibility reasons.
-2. Save the converted checkpoint as `checkpoints/stylegan2/<dataset>_<resolution>.pt`.
-3. Modify methods `__init__()`, `download_checkpoint()` in `models/wrappers.py` under class StyleGAN2.
+## To use a custom trained model
+- Keep the .pt file in stylegan2/checkpoint with the filename corresponding stylegan2_{class}_{resolution}.pt
+- Or add a download link on line 130 in ganspace/models/wrappers.py
+- Add the class and resolution to the config dict on line 95 in ganspace/models/wrappers.py
 
 ## Acknowledgements
 We would like to thank:

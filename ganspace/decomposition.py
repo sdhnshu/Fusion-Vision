@@ -137,7 +137,7 @@ def compute(config, dump_name, instrumented_model):
     global B
 
     def timestamp(): return datetime.datetime.now().strftime("%d.%m %H:%M")
-    print(f'[{timestamp()}] Computing', dump_name.name)
+    print(f'[{timestamp()}] Computing decomposition', dump_name.name)
 
     # Ensure reproducibility
     torch.manual_seed(0)  # also sets cuda seeds
@@ -272,7 +272,7 @@ def compute(config, dump_name, instrumented_model):
 
         transformer.fit(X)
 
-        print(f'[{timestamp()}] Done in {datetime.datetime.now() - t_start_fit}')
+        print(f'[{timestamp()}] Decomposition done in {datetime.datetime.now() - t_start_fit}')
         assert np.all(transformer.transformer.mean_ <
                       1e-3), 'Mean of normalized data should be zero'
     else:
@@ -361,16 +361,13 @@ def get_or_compute(config, model=None, submit_config=None, force_recompute=False
 
 
 def _compute(submit_config, config, model=None, force_recompute=False):
-    basedir = Path(submit_config.run_dir)
-    outdir = basedir / 'out'
-
     if config.n is None:
         raise RuntimeError('Must specify number of samples with -n=XXX')
 
     if model and not isinstance(model, InstrumentedModel):
         raise RuntimeError('Passed model has to be wrapped in "InstrumentedModel"')
 
-    if config.use_w and not 'StyleGAN' in config.model:
+    if config.use_w and 'StyleGAN' not in config.model:
         raise RuntimeError(f'Cannot change latent space of non-StyleGAN model {config.model}')
 
     transformer = get_estimator(config.estimator, config.components, config.sparsity)
@@ -384,12 +381,12 @@ def _compute(submit_config, config, model=None, force_recompute=False):
         f'_seed{config.seed}' if config.seed else ''
     )
 
-    dump_path = basedir / 'cache' / 'components' / dump_name
+    dump_path = Path(submit_config.run_dir) / 'out' / 'components' / dump_name
 
     if not dump_path.is_file() or force_recompute:
-        print('Not cached')
+        print('Decomposition not cached')
         t_start = datetime.datetime.now()
         compute(config, dump_path, model)
-        print('Total time:', datetime.datetime.now() - t_start)
+        print('Total decomposition time:', datetime.datetime.now() - t_start)
 
     return dump_path

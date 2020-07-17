@@ -244,8 +244,8 @@ if __name__ == "__main__":
         ckpt["d"] = d_state
 
     name = os.path.splitext(os.path.basename(args.path))[0]
-    os.makedirs("stylegan2/converted-ckpts", exist_ok=True)
-    torch.save(ckpt, "stylegan2/converted-ckpts/" + name + ".pt")
+    os.makedirs("stylegan2/checkpoint", exist_ok=True)
+    torch.save(ckpt, "stylegan2/checkpoint/" + name + ".pt")
 
     batch_size = {256: 16, 512: 9, 1024: 4}
     n_sample = batch_size.get(size, 25)
@@ -276,6 +276,6 @@ if __name__ == "__main__":
     print(img_diff.abs().max())
 
     utils.save_image(
-        img_concat, "stylegan2/converted-ckpts/" + name + ".png",
+        img_concat, "stylegan2/checkpoint/" + name + ".png",
         nrow=n_sample, normalize=True, range=(-1, 1)
     )

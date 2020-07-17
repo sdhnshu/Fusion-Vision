@@ -138,10 +138,9 @@ class StyleGAN2(BaseModel):
         download_ckpt(url, outfile)
 
     def load_model(self):
-        checkpoint_root = os.environ.get(
-            'GANCONTROL_CHECKPOINT_DIR', Path(__file__).parent / 'checkpoints')
+        checkpoint_root = Path(__file__).parent.parent.parent / 'stylegan2' / 'checkpoint'
         checkpoint = Path(checkpoint_root) / \
-            f'stylegan2/stylegan2_{self.outclass}_{self.resolution}.pt'
+            f'stylegan2_{self.outclass}_{self.resolution}.pt'
 
         self.model = stylegan2.Generator(self.resolution, 512, 8).to(self.device)
 
@@ -300,7 +299,7 @@ def get_instrumented_model(name, output_class, layers, device, **kwargs):
     # Verify given layer names
     module_names = [name for (name, _) in model.named_modules()]
     for layer_name in layers:
-        if not layer_name in module_names:
+        if layer_name not in module_names:
             print(f"Layer '{layer_name}' not found in model!")
             print("Available layers:", '\n'.join(module_names))
             raise RuntimeError(f"Unknown layer '{layer_name}''")
