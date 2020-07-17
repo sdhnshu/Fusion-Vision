@@ -8,7 +8,6 @@ class InstrumentedModel(torch.nn.Module):
     '''
     A wrapper for hooking, probing and intervening in pytorch Modules.
     Example usage:
-
     ```
     model = load_my_model()
     with inst as InstrumentedModel(model):
@@ -133,7 +132,6 @@ class InstrumentedModel(torch.nn.Module):
     def add_hooks(self, layernames):
         '''
         Sets up a set of layers to be hooked.
-
         Usually not called directly: use edit_layer or retain_layer instead.
         '''
         needed = set()

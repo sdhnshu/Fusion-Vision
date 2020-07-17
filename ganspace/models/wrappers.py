@@ -1,14 +1,12 @@
 import torch
 import numpy as np
-# import re
 import os
 import random
 from pathlib import Path
 from types import SimpleNamespace
-from ganspace.utils import download_ckpt
-# from netdissect import proggan, zdataset
 import stylegan2.model as stylegan2
 from abc import abstractmethod, ABC as AbstractBaseClass
+from ganspace.utils import download_ckpt
 from ganspace.netdissect.modelconfig import create_instrumented_model
 
 
@@ -185,6 +183,7 @@ class StyleGAN2(BaseModel):
         return 0.5*(out+1)
 
     def partial_forward(self, x, layer_name):
+        # TODO: Find why it is similar to stridedstyle commit on models.py
         styles = x if isinstance(x, list) else [x]
         inject_index = None
         noise = self.noise
