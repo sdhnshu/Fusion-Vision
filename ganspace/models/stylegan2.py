@@ -1,7 +1,9 @@
-#########################################################################################################
-##################################              IMPORTANT              ##################################
-################################## Exact replica of stylegan2/model.py ##################################
-#########################################################################################################
+#################################################################################################
+#############################              IMPORTANT              ###############################
+#################### This file and ganspace/models/op folder are replicas #######################
+######################## of stylegan2/model.py and stylegan2/op folder ##########################
+#################################################################################################
+
 import math
 import random
 # import functools
@@ -12,7 +14,7 @@ from torch import nn
 from torch.nn import functional as F
 # from torch.autograd import Function
 
-from op import FusedLeakyReLU, fused_leaky_relu, upfirdn2d
+from models.op import FusedLeakyReLU, fused_leaky_relu, upfirdn2d
 
 
 class PixelNorm(nn.Module):
