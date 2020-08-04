@@ -1,13 +1,13 @@
 import numpy as np
 import torch
-from ganspace.utils import pad_frames
-from ganspace.decomposition import get_random_dirs, get_or_compute, get_max_batch_size
-from ganspace.decomposition import SEED_VISUALIZATION
-from ganspace.config import Config
+from utils import pad_frames
+from decomposition import get_random_dirs, get_or_compute, get_max_batch_size
+from decomposition import SEED_VISUALIZATION
+from config import Config
 from tqdm import trange
 import datetime
-from ganspace.models import get_instrumented_model
-from ganspace.estimators import get_estimator
+from models import get_instrumented_model
+from estimators import get_estimator
 from PIL import Image
 from os import makedirs
 from pathlib import Path
@@ -69,7 +69,7 @@ def make_mp4(imgs, duration_secs, outname):
 def make_grid(latent, lat_mean, lat_comp, lat_stdev, act_mean,
               act_comp, act_stdev, scale=1, n_rows=10, n_cols=5,
               make_plots=True, edit_type='latent'):
-    from ganspace.notebooks.notebook_utils import create_strip_centered
+    from notebooks.notebook_utils import create_strip_centered
 
     inst.remove_edits()
     x_range = np.linspace(-scale, scale, n_cols, dtype=np.float32)  # scale in sigmas
@@ -214,7 +214,7 @@ if __name__ == '__main__':
     np.random.seed(SEED_VISUALIZATION)
 
     # Make output directories
-    outdir = Path(__file__).parent.resolve() / 'ganspace' / 'out'
+    outdir = Path(__file__).parent.resolve() / 'out'
     est_id = f'spca_{args.sparsity}' if args.estimator == 'spca' else args.estimator
     outdir_comp = outdir/model.name/layer_key.lower()/est_id/'comp'
     outdir_inst = outdir/model.name/layer_key.lower()/est_id/'inst'

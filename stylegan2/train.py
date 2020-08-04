@@ -17,16 +17,16 @@ try:
 except ImportError:
     wandb = None
 
-from stylegan2.model import Generator, Discriminator
-from stylegan2.dataset import MultiResolutionDataset
-from stylegan2.distributed import (
+from model import Generator, Discriminator
+from dataset import MultiResolutionDataset
+from distributed import (
     get_rank,
     synchronize,
     reduce_loss_dict,
     reduce_sum,
     get_world_size,
 )
-from stylegan2.non_leaking import augment
+from non_leaking import augment
 
 
 def data_sampler(dataset, shuffle, distributed):
@@ -314,7 +314,7 @@ def train(args, loader, generator, discriminator, g_optim, d_optim, g_ema, devic
                     sample, _ = g_ema([sample_z])
                     utils.save_image(
                         sample,
-                        f"stylegan2/sample/{str(i).zfill(6)}.png",
+                        f"sample/{str(i).zfill(6)}.png",
                         nrow=int(args.n_sample ** 0.5),
                         normalize=True,
                         range=(-1, 1),
@@ -331,7 +331,7 @@ def train(args, loader, generator, discriminator, g_optim, d_optim, g_ema, devic
                         "args": args,
                         "ada_aug_p": ada_aug_p,
                     },
-                    f"stylegan2/checkpoint/{str(i).zfill(6)}.pt",
+                    f"checkpoint/{str(i).zfill(6)}.pt",
                 )
 
 

@@ -9,8 +9,8 @@ from torchvision import transforms
 from PIL import Image
 from tqdm import tqdm
 
-import stylegan2.lpips as lpips
-from stylegan2.model import Generator
+import lpips as lpips
+from model import Generator
 
 
 def noise_regularize(noises):
@@ -209,6 +209,6 @@ if __name__ == "__main__":
 
         img_name = os.path.splitext(os.path.basename(input_name))[0] + "-project.png"
         pil_img = Image.fromarray(img_ar[i])
-        pil_img.save('stylegan2/sample/' + img_name)
+        pil_img.save('sample/' + img_name)
 
-    torch.save(result_file, 'stylegan2/sample/' + filename)
+    torch.save(result_file, 'sample/' + filename)

@@ -8,7 +8,7 @@ import torch
 import numpy as np
 from torchvision import utils
 
-from stylegan2.model import Generator, Discriminator
+from model import Generator, Discriminator
 
 
 def convert_modconv(vars, source_name, target_name, flip=False):
@@ -244,8 +244,8 @@ if __name__ == "__main__":
         ckpt["d"] = d_state
 
     name = os.path.splitext(os.path.basename(args.path))[0]
-    os.makedirs("stylegan2/checkpoint", exist_ok=True)
-    torch.save(ckpt, "stylegan2/checkpoint/" + name + ".pt")
+    os.makedirs("checkpoint", exist_ok=True)
+    torch.save(ckpt, "checkpoint/" + name + ".pt")
 
     batch_size = {256: 16, 512: 9, 1024: 4}
     n_sample = batch_size.get(size, 25)
@@ -276,6 +276,6 @@ if __name__ == "__main__":
     print(img_diff.abs().max())
 
     utils.save_image(
-        img_concat, "stylegan2/checkpoint/" + name + ".png",
+        img_concat, "checkpoint/" + name + ".png",
         nrow=n_sample, normalize=True, range=(-1, 1)
     )
