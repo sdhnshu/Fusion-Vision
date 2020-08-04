@@ -1,5 +1,5 @@
-# from ganspace.config import Config
-from ganspace.models import get_model
+# from config import Config
+from models import get_model
 import torch
 import numpy as np
 # from types import SimpleNamespace

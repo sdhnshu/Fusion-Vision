@@ -1,4 +1,4 @@
-from ganspace.models import get_instrumented_model
+from models import get_instrumented_model
 import torch
 import numpy as np
 # from types import SimpleNamespace

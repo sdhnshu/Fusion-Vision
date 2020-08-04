@@ -3,7 +3,7 @@ import math
 import torch
 from torch.nn import functional as F
 
-from stylegan2.op import upfirdn2d
+from op import upfirdn2d
 
 
 SYM6 = (

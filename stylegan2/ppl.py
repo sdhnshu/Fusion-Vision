@@ -5,8 +5,8 @@ from torch.nn import functional as F
 import numpy as np
 from tqdm import tqdm
 
-import stylegan2.lpips as lpips
-from stylegan2.model import Generator
+import lpips as lpips
+from model import Generator
 
 
 def normalize(x):

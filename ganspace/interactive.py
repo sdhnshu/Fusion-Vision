@@ -10,15 +10,15 @@ from types import SimpleNamespace
 # import matplotlib.pyplot as plt
 from pathlib import Path
 from os import makedirs
-from ganspace.models import get_instrumented_model
-from ganspace.config import Config
-from ganspace.decomposition import get_or_compute
+from models import get_instrumented_model
+from config import Config
+from decomposition import get_or_compute
 # from torch.nn.functional import interpolate
-from ganspace.TkTorchWindow import TorchImageView
+from TkTorchWindow import TorchImageView
 from functools import partial
 from platform import system
 from PIL import Image
-from ganspace.utils import pad_frames, prettify_name
+from utils import pad_frames, prettify_name
 import pickle
 
 # For platform specific UI tweaks

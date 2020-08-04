@@ -4,10 +4,10 @@ import os
 import random
 from pathlib import Path
 from types import SimpleNamespace
-import stylegan2.model as stylegan2
+import models.stylegan2 as stylegan2
 from abc import abstractmethod, ABC as AbstractBaseClass
-from ganspace.utils import download_ckpt
-from ganspace.netdissect.modelconfig import create_instrumented_model
+from utils import download_ckpt
+from netdissect.modelconfig import create_instrumented_model
 
 
 class BaseModel(AbstractBaseClass, torch.nn.Module):
@@ -138,7 +138,7 @@ class StyleGAN2(BaseModel):
         download_ckpt(url, outfile)
 
     def load_model(self):
-        checkpoint_root = Path(__file__).parent.parent.parent / 'stylegan2' / 'checkpoint'
+        checkpoint_root = Path(__file__).parent.parent.parent / 'checkpoint'
         checkpoint = Path(checkpoint_root) / \
             f'stylegan2_{self.outclass}_{self.resolution}.pt'
 

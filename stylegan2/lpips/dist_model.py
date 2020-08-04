@@ -18,8 +18,8 @@ from tqdm import tqdm
 
 # from IPython import embed
 
-from stylegan2.lpips import networks_basic as networks
-import stylegan2.lpips as util
+from lpips import networks_basic as networks
+import lpips as util
 
 
 class DistModel(BaseModel):

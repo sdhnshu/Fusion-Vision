@@ -10,9 +10,9 @@ from torch.autograd import Variable
 # from pdb import set_trace as st
 # from skimage import color
 # from IPython import embed
-from stylegan2.lpips import pretrained_networks as pn
+from lpips import pretrained_networks as pn
 
-import stylegan2.lpips as util
+import lpips as util
 
 
 def spatial_average(in_tens, keepdim=True):

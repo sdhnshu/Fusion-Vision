@@ -1,4 +1,4 @@
-from ganspace.utils import prettify_name, pad_frames
+from utils import prettify_name, pad_frames
 import torch
 import numpy as np
 from os import makedirs

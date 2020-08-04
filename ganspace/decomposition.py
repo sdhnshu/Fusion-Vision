@@ -1,6 +1,6 @@
-from ganspace.models import get_instrumented_model
-from ganspace.estimators import get_estimator
-from ganspace.netdissect.nethook import InstrumentedModel
+from models import get_instrumented_model
+from estimators import get_estimator
+from netdissect.nethook import InstrumentedModel
 from tqdm import trange
 from types import SimpleNamespace
 import torch

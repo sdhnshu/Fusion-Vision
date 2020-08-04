@@ -1,7 +1,7 @@
 import argparse
 import torch
 from torchvision import utils
-from stylegan2.model import Generator
+from model import Generator
 
 
 if __name__ == "__main__":

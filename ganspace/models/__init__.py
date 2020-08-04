@@ -1,1 +1,1 @@
-from ganspace.models.wrappers import *
+from models.wrappers import *
