@@ -6,7 +6,17 @@ from torch.utils.cpp_extension import load
 
 
 module_path = os.path.dirname(__file__)
-upfirdn2d_op = None
+try:
+    upfirdn2d_op = load(
+        "upfirdn2d",
+        sources=[
+            os.path.join(module_path, "upfirdn2d.cpp"),
+            os.path.join(module_path, "upfirdn2d_kernel.cu"),
+        ],
+    )
+except Exception:
+    upfirdn2d_op = None
+    print('Warning: Couldnt load custom cuda/cpp code, use cpu only')
 
 
 class UpFirDn2dBackward(Function):
@@ -140,20 +150,10 @@ def upfirdn2d(input, kernel, up=1, down=1, pad=(0, 0)):
         out = upfirdn2d_native(
             input, kernel, up, up, down, down, pad[0], pad[1], pad[0], pad[1]
         )
-
     else:
-        global upfirdn2d_op
-        upfirdn2d_op = load(
-            "upfirdn2d",
-            sources=[
-                os.path.join(module_path, "upfirdn2d.cpp"),
-                os.path.join(module_path, "upfirdn2d_kernel.cu"),
-            ],
-        )
         out = UpFirDn2d.apply(
             input, kernel, (up, up), (down, down), (pad[0], pad[1], pad[0], pad[1])
         )
-
     return out
 
 
