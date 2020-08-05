@@ -242,7 +242,7 @@ if __name__ == '__main__':
         make_grid(tensors.Z_global_mean, tensors.Z_global_mean,
                   tensors.Z_comp, tensors.Z_stdev, tensors.X_global_mean,
                   tensors.X_comp, tensors.X_stdev, scale=args.sigma,
-                  edit_type=edit_mode, n_rows=14)
+                  edit_type=edit_mode, n_rows=args.n_rows)
         plt.savefig(outdir_summ / f'components_{get_edit_name(edit_mode)}.jpg', dpi=300)
         show()
 
@@ -283,7 +283,7 @@ if __name__ == '__main__':
         make_grid(tensors.Z_global_mean, tensors.Z_global_mean,
                   random_dirs_z, tensors.Z_stdev,
                   tensors.X_global_mean, random_dirs_act, tensors.X_stdev,
-                  scale=args.sigma, edit_type=edit_mode, n_rows=14)
+                  scale=args.sigma, edit_type=edit_mode, n_rows=args.n_rows)
         plt.savefig(outdir_summ / f'random_dirs_{get_edit_name(edit_mode)}.jpg', dpi=300)
         show()
 
@@ -304,7 +304,7 @@ if __name__ == '__main__':
             make_grid(z, tensors.Z_global_mean, tensors.Z_comp,
                       tensors.Z_stdev,
                       tensors.X_global_mean, tensors.X_comp,
-                      tensors.X_stdev, scale=args.sigma, edit_type=edit_mode, n_rows=14)
+                      tensors.X_stdev, scale=args.sigma, edit_type=edit_mode, n_rows=args.n_rows)
             plt.savefig(outdir_summ / f'samp{img_idx}_real_{get_edit_name(edit_mode)}.jpg', dpi=300)
             show()
 
