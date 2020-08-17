@@ -1,32 +1,61 @@
-# Fusion Vision:
-![Python 3.8](https://img.shields.io/badge/python-3.8-blue.svg)
-![PyTorch 1.5](https://img.shields.io/badge/pytorch-1.5-blue.svg)
+# Fusion Vision
+![Python 3.6](https://img.shields.io/badge/python-3.6-blue.svg)
+![PyTorch 1.6](https://img.shields.io/badge/pytorch-1.6-blue.svg)
 
--- OPEN IN COLAB LINK for artists who can code and want to utilize a GPU
+Fusion Vision is an end-to-end application that focuses on providing creative control over the generative process of StyleGAN2. This application helps artists focus on their creations rather than getting familiar with code *(Creative coders, links to colab notebooks below)*
 
-The idea behind this project is to build an end-to-end application where the user can control a novel image creation process by feeding in an audio snippet.
+## Features
+- Generate images using __10+ models__ including
+    - human and anime faces
+    - abstract and modern art
+    - trypophobia and microscopic imgs
+    - imagenet and wildlife dataset
+    - cats, horses, cars and churches
+- __Fine-grained mixing__ of multiple seeds
+- Control __hand-crafted features__ (like haircolor, age, gender in faces) for each model
+- Generate __interpolating animations__ between images or animations with __features controlled by audio__
 
--- DEMO VIDEO/IMAGE HERE
+## Background
+Generative Adversarial Networs (GANs) can create images that are ORIGINAL in the true sense, but are hard to control. Using a mathematical technique called Principle Component Analysis, one can find such controls. Fusion Vision gives you those fine-grained controls over a __StyleGAN2__ model.
 
-# Inspiration
-The inspiration came from an [artwork by prominent artist Mario Klingemann](https://youtu.be/A6bo_mIOto0) (*For the brave: play it at 0.25x if you want to see some eerie faces*).
+## Inspiration
+This [artwork by Mario Klingemann](https://youtu.be/A6bo_mIOto0) inspired me to take up this project. *(Play the video at 0.25x for some nightmare fuel)*.
 
-# Technology
-The latent spaces of a generative adversarial network called [StyleGAN2](https://github.com/NVlabs/stylegan2) will be explored based on the techniques used in the [GANSpace](https://github.com/harskish/ganspace) paper and interesting controls will be shortlisted. These controls are then mapped to an audio signal and can be controlled using a friendly user interface.
+## Usage Instructions
 
-# How can I set it up?
-See [SETUP.md](SETUP.md)
+### For Artists
+*Yet to come*
 
-# Notebooks
+### For Creative Coders
+*Stay tuned for notebooks*
 
-- Convert official tensorflow checkpoints to torch [weights_tf_to_pt.ipynb](notebooks/weights_tf_to_pt.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/sdhnshu/Fusion-Vision/blob/master/weights_tf_to_pt.ipynb)
+## Using a custom trained model
 
-# Credits
+If you've trained a StyleGAN2 model using the [official NVIDIA code](https://github.com/NVlabs/stylegan2), convert your weights using this colab notebook
+
+[weights_tf_to_pt.ipynb](notebooks/weights_tf_to_pt.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/sdhnshu/Fusion-Vision/blob/master/notebooks/weights_tf_to_pt.ipynb)
+
+If you've trained your model using [Kim Seonghyeon's code](https://github.com/rosinality/stylegan2-pytorch), you can skip the conversion.
+
+Use the following notebook to do PCA on your model. Use the interactive widget in the notebook to fine-tune your components and save them
+
+[explore_latent_space.ipynb](notebooks/explore_latent_space.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/sdhnshu/Fusion-Vision/blob/master/notebooks/explore_latent_space.ipynb)
+
+
+## Deploy to Openshift Online
+
+- Download the CLI from [here](https://docs.openshift.com/container-platform/4.5/cli_reference/openshift_cli/getting-started-cli.html#installing-the-cli)
+- Login using the CLI using the [login command](imgs/login-command.png) or use `oc login`
+- Use `scripts/build.sh` to delete the existing project and create a new one from the template
+- Copy the [webhook url with secret](imgs/webhook.png) from the Builds page and paste it your [github settings]((imgs/github-hook.png))
+
+
+## Credits
 - [Goku Mohandas](https://github.com/GokuMohandas/GokuMohandas) for the [summer 2020 incubator](https://madewithml.com/collections/7828/ds-incubator-summer-2020/)
-- [Erik Härkönen](https://github.com/harskish) for the [GANspace](https://github.com/harskish/ganspace) project
+- [Erik Härkönen](https://github.com/harskish) for the [GANspace project](https://github.com/harskish/ganspace)
 - [Kim Seonghyeon](https://github.com/rosinality) for the [pytorch implementation of StyleGAN2](https://github.com/rosinality/stylegan2-pytorch)
 - [Justin Pinkney](https://github.com/justinpinkney) for the list of [pretrained StyleGAN2 models](https://github.com/justinpinkney/awesome-pretrained-stylegan2)
 - [Derrick Schultz](https://github.com/dvschultz) for the [StyleGAN2 workshop](https://www.youtube.com/playlist?list=PLWuCzxqIpJs-l4OygaHssyydjOu-AWoHv)
 
-# License
+## License
 The code of this repository is released under the [Apache 2.0](LICENSE) license.

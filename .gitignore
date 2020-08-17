@@ -127,8 +127,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Custom
 .vscode
-wandb/
 .DS_Store
-cache/
-stems
