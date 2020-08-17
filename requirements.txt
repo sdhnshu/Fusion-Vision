@@ -1,15 +1,10 @@
-fastapi==0.58.0
-matplotlib==3.2.2
-numpy==1.18.5
-pandas==1.0.5
-pytest==5.4.3
-scipy==1.4.1
-seaborn==0.10.1
-sklearn==0.0
-streamlit==0.61.0
-torch==1.5.1
-tqdm==4.46.1
-uvicorn==0.11.7
-wandb==0.9.1
-flake8==3.8.3
-autopep8==1.5.3
+scikit-image==0.17.2
+tqdm==4.47.0
+fastapi==0.61.0
+uvicorn==0.11.8
+
+# torch 1.6 cpu (python 3.6 linux)
+https://download.pytorch.org/whl/cpu/torch-1.6.0%2Bcpu-cp36-cp36m-linux_x86_64.whl
+
+# torchvision 0.7 cpu (python 3.6 linux)
+https://download.pytorch.org/whl/cpu/torchvision-0.7.0%2Bcpu-cp36-cp36m-linux_x86_64.whl
