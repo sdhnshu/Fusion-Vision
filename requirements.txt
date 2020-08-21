@@ -2,6 +2,7 @@ scikit-image==0.17.2
 tqdm==4.47.0
 fastapi==0.61.0
 uvicorn==0.11.8
+requests==2.24.0
 
 # torch 1.6 cpu (python 3.6 linux)
 https://download.pytorch.org/whl/cpu/torch-1.6.0%2Bcpu-cp36-cp36m-linux_x86_64.whl

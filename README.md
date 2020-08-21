@@ -42,8 +42,10 @@ Use the following notebook to do PCA on your model. Use the interactive widget i
 [explore_latent_space.ipynb](notebooks/explore_latent_space.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/sdhnshu/Fusion-Vision/blob/master/notebooks/explore_latent_space.ipynb)
 
 
-## Deploy to Openshift Online
+## Develop and Deploy to Openshift Online
 
+- To run a development server, use `scripts/run_dev.sh` or `scripts/run_dev.sh docker`
+- Use `vue ui` from [Vue-CLI](https://cli.vuejs.org/) to build and serve
 - Download the CLI from [here](https://docs.openshift.com/container-platform/4.5/cli_reference/openshift_cli/getting-started-cli.html#installing-the-cli)
 - Login using the CLI using the [login command](imgs/login-command.png) or use `oc login`
 - Use `scripts/build.sh` to delete the existing project and create a new one from the template
