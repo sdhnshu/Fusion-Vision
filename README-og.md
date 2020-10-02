@@ -1,3 +1,16 @@
+Sparkpost key:
+6335a1f0cec3e3ceb62c6a8a23d7ccc93d0658cc
+
+
+
+
+
+
+
+
+
+
+
 # Fusion Vision
 ![Python 3.6](https://img.shields.io/badge/python-3.6-blue.svg)
 ![PyTorch 1.6](https://img.shields.io/badge/pytorch-1.6-blue.svg)
@@ -53,11 +66,11 @@ Use the following notebook to do PCA on your model. Use the interactive widget i
 
 
 ## Credits
-- [Goku Mohandas](https://github.com/GokuMohandas/GokuMohandas) for the [summer 2020 incubator](https://madewithml.com/collections/7828/ds-incubator-summer-2020/)
+
 - [Erik Härkönen](https://github.com/harskish) for the [GANspace project](https://github.com/harskish/ganspace)
 - [Kim Seonghyeon](https://github.com/rosinality) for the [pytorch implementation of StyleGAN2](https://github.com/rosinality/stylegan2-pytorch)
 - [Justin Pinkney](https://github.com/justinpinkney) for the list of [pretrained StyleGAN2 models](https://github.com/justinpinkney/awesome-pretrained-stylegan2)
-- [Derrick Schultz](https://github.com/dvschultz) for the [StyleGAN2 workshop](https://www.youtube.com/playlist?list=PLWuCzxqIpJs-l4OygaHssyydjOu-AWoHv)
+- [Sebastián Ramírez](https://github.com/tiangolo) for the [amazing cookiecutter template](https://github.com/tiangolo/full-stack-fastapi-postgresql)
 
 ## License
 The code of this repository is released under the [Apache 2.0](LICENSE) license.
